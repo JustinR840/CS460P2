@@ -15,7 +15,7 @@ void SetLimits ()
 	const int __trl2r = setrlimit(RLIMIT_CPU, & __trl2);
 	struct rlimit __trl3;
 	const int __trl3r = getrlimit(RLIMIT_FSIZE, & __trl3);
-	struct rlimit __trl4 = {10000000, __trl3.rlim_max};
+	struct rlimit __trl4 = {10000, __trl3.rlim_max};
 	const int __trl4r = setrlimit(RLIMIT_FSIZE, & __trl4);
 	// End of time limit code
 }
