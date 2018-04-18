@@ -90,25 +90,27 @@ class SyntacticalAnalyzer(object):
 
 
 	def more_defines(self):
-		firsts = []
+		firsts = [Token.LPAREN_T]
 		follows = []
 
 		errors = 0
-
-		errors += self.define()
-		errors += self.more_defines()
+        
+        if( self.ct in firsts):
+            errors += self.define()
+            errors += self.more_defines()
 
 		return errors
 
 
 	def stmt_list(self):
-		firsts = []
+		firsts = [Token.IDENT_T", Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
 		follows = []
 
 		errors = 0
 
-		errors += self.stmt()
-		errors += self.stmt_list()
+        if (self.ct in firsts):
+                  errors += self.stmt()
+                  errors += self.stmt_list()
 
 		return errors
 
@@ -162,13 +164,28 @@ class SyntacticalAnalyzer(object):
 
 
 	def more_tokens(self):
-		firsts = []
+      firsts = [self.ct == Token.IDENT_T or self.ct == Token.NUMLIT_T or
+                     self.ct == Token.STRLIT_T or self.ct == Token.CONS_T or
+                     self.ct == Token.IF_T or self.ct == Token.DISPLAY_T or
+                     self.ct == Token.NEWLINE_T or self.ct == Token.LISTOP_T or
+                     self.ct == Token.AND_T or self.ct == Token.OR_T or
+                     self.ct == Token.NOT_T or self.ct == Token.DEFINE_T or
+                     self.ct == Token.NUMBERP_T or self.ct == Token.SYMBOLP_T or
+                     self.ct == Token.LISTP_T or self.ct == Token.ZEROP_T or
+                     self.ct == Token.NULLP_T or self.ct == Token.STRINGP_T or
+                     self.ct == Token.PLUS_T or self.ct == Token.MINUS_T or
+                     self.ct == Token.DIV_T or self.ct == Token.MULT_T or
+                     self.ct == Token.MODULO_T or self.ct == Token.EQUALTO_T or
+                     self.ct == Token.GT_T or self.ct == Token.LT_T or
+                     self.ct == Token.GTE_T or self.ct == Token.LTE_T or
+                     self.ct == Token.COND_T or self.ct == Token.ELSE_T)]
 		follows = []
 
 		errors = 0
-
-		errors += self.any_other_token()
-		errors += self.more_tokens()
+                  
+        if( self.ct in first):
+                  errors += self.any_other_token()
+                  errors += self.more_tokens()
 
 		return errors
 
