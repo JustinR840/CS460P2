@@ -25,8 +25,3 @@ class LexicalAnalyzer(object):
 
 	def getTokenName(self, token):
 		return self.Wrapper.Lex_GetTokenName(self.lex, token)
-
-	def ReportError(self, err):
-		print(err)
-		# We're not going to use the error handling for the
-		# lexical analyzer I think. We'll implement our own

@@ -6,6 +6,13 @@ class SyntacticalAnalyzer(object):
 		self.lex = lex
 
 
+	def ReportError(self, err):
+		print(err)
+		# TODO: Error reporting for the Syntactical Analyzer
+
+	# TODO: Other output forms for Syntactical Analyzer
+
+
 	def parse(self):
 		# Do other stuff here like make output files maybe
 		self.ct = self.lex.getToken()
@@ -27,7 +34,7 @@ class SyntacticalAnalyzer(object):
 			# self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Program: Expected EOF_T")
+			self.ReportError("Program: Expected EOF_T")
 
 		return errors
 
@@ -42,25 +49,25 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Define: Expected LPAREN_T")
+			self.ReportError("Define: Expected LPAREN_T")
 
 		if(self.ct == Token.DEFINE_T):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Define: Expected DEFINE_T")
+			self.ReportError("Define: Expected DEFINE_T")
 
 		if(self.ct == Token.LPAREN_T):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Define: Expected LPAREN_T")
+			self.ReportError("Define: Expected LPAREN_T")
 
 		if(self.ct == Token.IDENT_T):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Define: Expected IDENT_T")
+			self.ReportError("Define: Expected IDENT_T")
 
 		errors += self.param_list()
 
@@ -68,7 +75,7 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Define: Expected RPAREN_T")
+			self.ReportError("Define: Expected RPAREN_T")
 
 		errors += self.stmt()
 		errors += self.stmt_list()
@@ -77,7 +84,7 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Define: Expected RPAREN_T")
+			self.ReportError("Define: Expected RPAREN_T")
 
 		return errors
 
@@ -121,7 +128,7 @@ class SyntacticalAnalyzer(object):
 				self.ct = self.lex.getToken()
 			else:
 				errors += 1
-				self.lex.ReportError("Stmt: Unexpected " + self.lex.getTokenName(self.ct) + "; RPAREN_T expected after <action>")
+				self.ReportError("Stmt: Unexpected " + self.lex.getTokenName(self.ct) + "; RPAREN_T expected after <action>")
 		else:
 			errors += self.literal()
 
@@ -177,7 +184,7 @@ class SyntacticalAnalyzer(object):
 			errors += self.param_list()
 		else:
 			errors += 1
-			self.lex.ReportError("Param_List: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected IDENT_T")
+			self.ReportError("Param_List: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected IDENT_T")
 
 		return errors
 
@@ -204,7 +211,7 @@ class SyntacticalAnalyzer(object):
 			errors += self.stmt_pair_body()
 		else:
 			errors += 1
-			self.lex.ReportError("Stmt_Pair: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
+			self.ReportError("Stmt_Pair: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
 
 		return errors
 
@@ -222,7 +229,7 @@ class SyntacticalAnalyzer(object):
 				self.ct = self.lex.getToken()
 			else:
 				errors += 1
-				self.lex.ReportError("")
+				self.ReportError("")
 		else:
 			errors += self.stmt()
 			errors += self.stmt()
@@ -231,7 +238,7 @@ class SyntacticalAnalyzer(object):
 				errors += self.stmt_pair()
 			else:
 				errors += 1
-				self.lex.ReportError("")
+				self.ReportError("")
 
 		return errors
 
@@ -253,7 +260,7 @@ class SyntacticalAnalyzer(object):
 				errors += self.stmt_pair_body()
 			else:
 				errors += 1
-				self.lex.ReportError("")
+				self.ReportError("")
 		elif(self.ct == Token.LISTOP_T or self.ct == Token.NOT_T or
 		     self.ct == Token.NUMBERP_T or self.ct == Token.SYMBOLP_T or
 		     self.ct == Token.LISTP_T or self.ct == Token.ZEROP_T or
@@ -280,7 +287,7 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Action: You really messed up.")
+			self.ReportError("Action: You really messed up.")
 
 		return errors
 
@@ -298,7 +305,7 @@ class SyntacticalAnalyzer(object):
 				self.ct = self.lex.getToken()
 			else:
 				errors += 1
-				self.lex.ReportError("")
+				self.ReportError("")
 		elif(self.ct == Token.QUOTE_T):
 			self.ct = self.lex.getToken()
 			errors += self.any_other_token()
@@ -320,7 +327,7 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.lex.ReportError("Any_Other_Token: You messed up, bad.")
+			self.ReportError("Any_Other_Token: You messed up, bad.")
 
 		return errors
 

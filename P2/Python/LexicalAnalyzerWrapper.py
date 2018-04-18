@@ -3,9 +3,12 @@ from platform import system
 
 class LexicalAnalyzerWrapper(object):
 	libDir = "../Lib/"
+	# TODO: Standardize these names
 	winLib = libDir + "CS460P2.dll"
 	linuxLib = libDir + "LibLex.so"
 
+	# TODO: These should go to debug log, NOT standard output
+	# TODO: Should this be in main?
 	if(system() == "Windows"):
 		print("OS is Windows - Using CS460P2.dll")
 		lib = cdll.LoadLibrary(winLib)
