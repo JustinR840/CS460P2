@@ -3,6 +3,10 @@ import LexicalAnalyzerWrapper
 class LexicalAnalyzer(object):
 	def __init__(self, filename):
 		# Initialize the wrapper
+		# While this works, I don't like it. We're loading the library again every
+		# time we create a Lexical Analyzer class. I think perhaps if we declare
+		# this outside of init, it'll just be static to every LexicalAnalyzer object.
+		# TODO: Need to do some testing on this later.
 		self.Wrapper = LexicalAnalyzerWrapper.LexicalAnalyzerWrapper()
 		# Create the lexical analyzer
 		self.lex = self.Wrapper.Lex_New(filename)

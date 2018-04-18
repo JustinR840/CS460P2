@@ -1,10 +1,20 @@
 from ctypes import *
-
-
-
+from platform import system
 
 class LexicalAnalyzerWrapper(object):
-	lib = cdll.LoadLibrary("../CPP/CS460P2.dll")
+	libDir = "../Lib/"
+	winLib = libDir + "CS460P2.dll"
+	linuxLib = libDir + "LibLex.so"
+
+	if(system() == "Windows"):
+		print("OS is Windows - Using CS460P2.dll")
+		lib = cdll.LoadLibrary(winLib)
+	elif(system() == "Linux"):
+		print("OS is Linux - Using LibLex.so")
+		lib = cdll.LoadLibrary(linuxLib)
+	else:
+		raise Exception("Unsupported operating system")
+
 
 	Lex_New = lib.LexicalAnalyzer_New
 	Lex_Destructor = lib.LexicalAnalyzer_Destructor
@@ -41,7 +51,6 @@ class LexicalAnalyzerWrapper(object):
 
 	def Lex_GetTokenName(self, lex, t):
 		ptr = self._Lex_GetTokenName(lex, t)
-		print(hex(ptr))
 		lexeme = cast(ptr, c_char_p).value.decode("utf-8")
 		self._Lex_FreeChar(ptr)
 		return lexeme
