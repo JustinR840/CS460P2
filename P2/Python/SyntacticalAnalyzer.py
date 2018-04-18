@@ -199,9 +199,11 @@ class SyntacticalAnalyzer(object):
 		if(self.ct == Token.IDENT_T):
 			self.ct = self.lex.getToken()
 			errors += self.param_list()
-		else:
-			errors += 1
-			self.ReportError("Param_List: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected IDENT_T")
+		
+                  
+        #else:
+            #errors += 1
+            #self.ReportError("Param_List: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected IDENT_T")
 
 		return errors
 
@@ -211,14 +213,15 @@ class SyntacticalAnalyzer(object):
 		follows = []
 
 		errors = 0
-
-		errors += self.stmt()
+        
+        if( self.ct == Token.NUMLIT_T or Token.STRLIT_T or Token.QUOTE_T or Token.IDENT_T or Token.LPAREN_T ):
+                  errors += self.stmt()
 
 		return errors
 
 
 	def stmt_pair(self):
-		firsts = []
+		firsts = [Token.LPAREN_T]
 		follows = []
 
 		errors = 0
@@ -226,10 +229,12 @@ class SyntacticalAnalyzer(object):
 		if(self.ct == Token.LPAREN_T):
 			self.ct = self.lex.getToken()
 			errors += self.stmt_pair_body()
-		else:
+		
+        '''
+        else:
 			errors += 1
 			self.ReportError("Stmt_Pair: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
-
+        '''
 		return errors
 
 
