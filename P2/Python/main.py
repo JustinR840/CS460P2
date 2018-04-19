@@ -13,13 +13,7 @@ def main():
 	lex = LA.LexicalAnalyzer(argv[1].encode("utf-8"))
 	syn = SA.SyntacticalAnalyzer(lex)
 
-	ct = lex.getToken()
-
-	while(ct != Token.EOF_T):
-		print(lex.getTokenName(ct))
-		ct = lex.getToken()
-
-	#syn.parse()
+	syn.parse()
 
 
 
