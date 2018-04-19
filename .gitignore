@@ -1,2 +1,8 @@
 .idea/
 __pycache__/
+.AppleDouble/
+*.dbg
+*.lst
+*.p1
+*.p2
+.DS_Store
