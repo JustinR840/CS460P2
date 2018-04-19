@@ -7,13 +7,13 @@ class LexicalAnalyzerWrapper(object):
 	winLib = libDir + "CS460P2.dll"
 	linuxLib = libDir + "LibLex.so"
 
-	# TODO: These should go to debug log, NOT standard output
+	# TODO: These should go to a debug log, NOT standard output
 	# TODO: Should this be in main?
 	if(system() == "Windows"):
-		print("OS is Windows - Using CS460P2.dll")
+		#print("OS is Windows - Using CS460P2.dll")
 		lib = cdll.LoadLibrary(winLib)
 	elif(system() == "Linux"):
-		print("OS is Linux - Using LibLex.so")
+		#print("OS is Linux - Using LibLex.so")
 		lib = cdll.LoadLibrary(linuxLib)
 	else:
 		raise Exception("Unsupported operating system")
@@ -43,7 +43,6 @@ class LexicalAnalyzerWrapper(object):
 
 	def Lex_GetLexeme(self, lex):
 		ptr = self._Lex_GetLexeme(lex)
-		print(hex(ptr))
 		lexeme = cast(ptr, c_char_p).value.decode("utf-8")
 		self._Lex_FreeChar(ptr)
 		return lexeme
