@@ -9,6 +9,8 @@ class LexicalAnalyzerWrapper(object):
 
 	# TODO: These should go to a debug log, NOT standard output
 	# TODO: Should this be in main?
+	# This was handy when testing on my machine as I could test in my Windows environment
+	# and Window's Linux Subsystem at the same time.
 	if(system() == "Windows"):
 		#print("OS is Windows - Using CS460P2.dll")
 		lib = cdll.LoadLibrary(winLib)

@@ -1,32 +1,38 @@
+import LexicalAnalyzer as LA
 from Tokens import Token
 
 
 class SyntacticalAnalyzer(object):
-	def __init__(self, lex):
+	def __init__(self, filename):
+		self.filename = filename
+		self.p2File = open(self.filename[:-3] + ".p2", "a")
 		self.ct = ""
-		self.lex = lex
+		self.lex = LA.LexicalAnalyzer(filename.encode("utf-8"))
+
+	def __del__(self):
+		self.p2File.close()
 
 	def ReportError(self, err):
-		print(err)
+		self.writeToP2ListingFile(err)
 
 	def doHeaderOutput(self, funcName):
-		print("Entering " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct) + ", lexeme: " + self.lex.getLexeme())
+		self.writeToP2ListingFile("Entering " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct) + ", lexeme: " + self.lex.getLexeme())
 
 	def doExitOutput(self, funcName):
-		print("Exiting " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct) + ", lexeme: " + self.lex.getLexeme())
+		self.writeToP2ListingFile("Exiting " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct) + ", lexeme: " + self.lex.getLexeme())
 
 	def doRuleOutput(self, rule):
-		print("Using Rule: " + rule)
+		self.writeToP2ListingFile("Using Rule: " + rule)
 
-	# TODO: Error reporting for the Syntactical Analyzer
+	def writeToP2ListingFile(self, text):
+		self.p2File.write(text + "\n")
 
-	# TODO: Other output forms for Syntactical Analyzer
 
-	# TODO: Declare the first/follows outside of their function calls (make static)
+	# TODO: Declare the first/follows outside of their function calls (make static) (table maybe?)
 
 
 	def parse(self):
-		# Do other stuff here like make output files maybe
+		# Get the first token and start the program!
 		self.ct = self.lex.getToken()
 		errors = self.program()
 		print(errors, "found in Syntactical Analysis.")
@@ -49,7 +55,7 @@ class SyntacticalAnalyzer(object):
 		# self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.ReportError("Program: Expected EOF_T")
+			self.ReportError("Program: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected EOF_T")
 
 		self.doExitOutput("Program")
 		return errors
@@ -61,6 +67,8 @@ class SyntacticalAnalyzer(object):
 		follows = [Token.EOF_T, Token.LPAREN_T]
 
 		errors = 0
+
+		# Cascading if statements because we need to fulfill ALL requirements to be valid
 
 		if (self.ct == Token.LPAREN_T):
 			self.ct = self.lex.getToken()
@@ -89,22 +97,22 @@ class SyntacticalAnalyzer(object):
 								self.ct = self.lex.getToken()
 							else:
 								errors += 1
-								self.ReportError("Define: Expected RPAREN_T")
+								self.ReportError("Define: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 						else:
 							errors += 1
-							self.ReportError("Define: Expected RPAREN_T")
+							self.ReportError("Define: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 					else:
 						errors += 1
-						self.ReportError("Define: Expected IDENT_T")
+						self.ReportError("Define: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected IDENT_T")
 				else:
 					errors += 1
-					self.ReportError("Define: Expected LPAREN_T")
+					self.ReportError("Define: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
 			else:
 				errors += 1
-				self.ReportError("Define: Expected DEFINE_T")
+				self.ReportError("Define: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected DEFINE_T")
 		else:
 			errors += 1
-			self.ReportError("Define: Expected LPAREN_T")
+			self.ReportError("Define: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
 
 		self.doExitOutput("Define")
 		return errors
@@ -169,7 +177,7 @@ class SyntacticalAnalyzer(object):
 				self.ct = self.lex.getToken()
 			else:
 				errors += 1
-				self.ReportError("Stmt: Unexpected " + self.lex.getTokenName(self.ct) + "; RPAREN_T expected after <action>")
+				self.ReportError("Stmt: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 		else:
 			self.doRuleOutput("7")
 			errors += self.literal()
@@ -305,7 +313,7 @@ class SyntacticalAnalyzer(object):
 				self.ct = self.lex.getToken()
 			else:
 				errors += 1
-				self.ReportError("")
+				self.ReportError("Stmt_Pair_Body: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 		else:
 			self.doRuleOutput("22")
 			errors += self.stmt()
@@ -315,7 +323,7 @@ class SyntacticalAnalyzer(object):
 				errors += self.stmt_pair()
 			else:
 				errors += 1
-				self.ReportError("")
+				self.ReportError("Stmt_Pair_Body: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 
 		self.doExitOutput("Stmt_Pair_Body")
 		return errors
@@ -343,7 +351,7 @@ class SyntacticalAnalyzer(object):
 				errors += self.stmt_pair_body()
 			else:
 				errors += 1
-				self.ReportError("")
+				self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
 		elif (self.ct == Token.LISTOP_T or self.ct == Token.NOT_T or
 				      self.ct == Token.NUMBERP_T or self.ct == Token.SYMBOLP_T or
 				      self.ct == Token.LISTP_T or self.ct == Token.ZEROP_T or
@@ -375,7 +383,7 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.ReportError("Action: You really messed up.")
+			self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; <action> expected")
 
 		self.doExitOutput("Action")
 		return errors
@@ -398,7 +406,7 @@ class SyntacticalAnalyzer(object):
 				self.ct = self.lex.getToken()
 			else:
 				errors += 1
-				self.ReportError("")
+				self.ReportError("Any_Other_Token: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 		elif (self.ct == Token.QUOTE_T):
 			self.doRuleOutput("79")
 			self.ct = self.lex.getToken()
@@ -422,7 +430,7 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 		else:
 			errors += 1
-			self.ReportError("Any_Other_Token: You messed up, bad.")
+			self.ReportError("Any_Other_Token: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected <any_other_token>")
 
 		self.doExitOutput("Any_Other_Token")
 		return errors
