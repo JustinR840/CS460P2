@@ -5,3 +5,4 @@ __pycache__/
 *.lst
 *.p1
 *.p2
+.DS_Store
