@@ -3,6 +3,11 @@ from Tokens import Token
 
 
 class SyntacticalAnalyzer(object):
+
+
+
+
+
 	def __init__(self, filename):
 		self.filename = filename
 		self.p2File = open(self.filename[:-3] + ".p2", "a")
