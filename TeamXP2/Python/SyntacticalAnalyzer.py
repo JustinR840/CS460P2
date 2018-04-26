@@ -4,16 +4,28 @@ import Helpers
 
 
 class SyntacticalAnalyzer(object):
-
-
-
-
-
 	def __init__(self, filename):
 		self.filename = filename
 		self.p2File = open(self.filename[:-3] + ".p2", "a")
 		self.ct = ""
 		self.lex = LA.LexicalAnalyzer(filename.encode("utf-8"))
+
+		self.rule_mappings = {
+			1: self.program,
+			2: self.define,
+			3: self.more_defines,
+			4: self.stmt_list,
+			5: self.stmt,
+			6: self.literal,
+			7: self.quoted_lit,
+			8: self.more_tokens,
+			9: self.param_list,
+			10: self.else_part,
+			11: self.stmt_pair,
+			12: self.stmt_pair_body,
+			13: self.action,
+			14: self.any_other_token
+		}
 
 	def __del__(self):
 		self.p2File.close()
@@ -33,10 +45,41 @@ class SyntacticalAnalyzer(object):
 	def writeToP2ListingFile(self, text):
 		self.p2File.write(text + "\n")
 
+	def getRuleToUse(self, prod_rule):
+		if(prod_rule <= 81):
+			if(prod_rule >= 50):
+				return Rule.ANY_OTHER_TOKEN
+			elif(prod_rule >= 24):
+				return Rule.ACTION
+			elif(prod_rule >= 22):
+				return Rule.STMT_PAIR_BODY
+			elif(prod_rule >= 20):
+				return Rule.STMT_PAIR
+			elif(prod_rule >= 18):
+				return Rule.ELSE_PART
+			elif(prod_rule >= 16):
+				return Rule.PARAM_LIST
+			elif(prod_rule >= 14):
+				return Rule.MORE_TOKENS
+			elif(prod_rule >= 13):
+				return Rule.QUOTED_LIT
+			elif(prod_rule >= 10):
+				return Rule.LITERAL
+			elif(prod_rule >= 7):
+				return Rule.STMT
+			elif(prod_rule >= 5):
+				return Rule.STMT_LIST
+			elif(prod_rule >= 3):
+				return Rule.MORE_DEFINES
+			elif(prod_rule >= 2):
+				return Rule.DEFINE
+			elif(prod_rule >= 1):
+				return Rule.PROGRAM
 
 	def parse(self):
 		# Get the first token and start the program!
 		self.ct = self.lex.getToken()
+		self.doRuleOutput("1")
 		errors = self.program()
 		print(errors, "found in Syntactical Analysis.")
 
@@ -425,11 +468,11 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 			errors += 1
 
-		if (self.ct == Token.LPAREN_T):
+		if(self.ct == Token.LPAREN_T):
 			self.doRuleOutput("50")
 			self.ct = self.lex.getToken()
 			errors += self.more_tokens()
-			if (self.ct == Token.RPAREN_T):
+			if(self.ct == Token.RPAREN_T):
 				self.ct = self.lex.getToken()
 			else:
 				errors += 1
@@ -438,27 +481,15 @@ class SyntacticalAnalyzer(object):
 			self.doRuleOutput("79")
 			self.ct = self.lex.getToken()
 			errors += self.any_other_token()
-		elif (self.ct == Token.IDENT_T or self.ct == Token.NUMLIT_T or
-				      self.ct == Token.STRLIT_T or self.ct == Token.CONS_T or
-				      self.ct == Token.IF_T or self.ct == Token.DISPLAY_T or
-				      self.ct == Token.NEWLINE_T or self.ct == Token.LISTOP_T or
-				      self.ct == Token.AND_T or self.ct == Token.OR_T or
-				      self.ct == Token.NOT_T or self.ct == Token.DEFINE_T or
-				      self.ct == Token.NUMBERP_T or self.ct == Token.SYMBOLP_T or
-				      self.ct == Token.LISTP_T or self.ct == Token.ZEROP_T or
-				      self.ct == Token.NULLP_T or self.ct == Token.STRINGP_T or
-				      self.ct == Token.PLUS_T or self.ct == Token.MINUS_T or
-				      self.ct == Token.DIV_T or self.ct == Token.MULT_T or
-				      self.ct == Token.MODULO_T or self.ct == Token.EQUALTO_T or
-				      self.ct == Token.GT_T or self.ct == Token.LT_T or
-				      self.ct == Token.GTE_T or self.ct == Token.LTE_T or
-				      self.ct == Token.COND_T or self.ct == Token.ELSE_T):
-			self.doRuleOutput("Somewhere Between 51 - 81, excluding 79")
-			self.ct = self.lex.getToken()
 		else:
-			errors += 1
-			self.ReportError("Any_Other_Token: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected <any_other_token>")
+			rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
+			if(rule_num != 0):
+				self.doRuleOutput(str(rule_num))
+				rule_to_use = self.getRuleToUse(rule_num)
+				self.rule_mappings[rule_to_use]()
+			else:
+				errors += 1
+				self.ReportError("Any_Other_Token: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected <any_other_token>")
 
 		self.doExitOutput("Any_Other_Token")
 		return errors
-
