@@ -3,7 +3,7 @@ from sys import argv, exit
 
 
 def main():
-	# TODO: Detect python version? We have a minimum of 3.6 because of auto() in Tokens.py
+	# TODO: Detect python version? We have a minimum of 3.6 because of auto() in Enums.py
 	if(len(argv) < 2):
 		print("format: " + argv[0] + " <filename>")
 		exit(1)

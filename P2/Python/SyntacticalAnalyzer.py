@@ -1,5 +1,6 @@
 import LexicalAnalyzer as LA
-from Tokens import Token
+from Enums import Token, Rule
+import Helpers
 
 
 class SyntacticalAnalyzer(object):
@@ -44,9 +45,10 @@ class SyntacticalAnalyzer(object):
 
 	def program(self):
 		self.doHeaderOutput("Program")
+		CURRENT_RULE = Rule.PROGRAM
 
-		firsts = [Token.LPAREN_T]
-		follows = []
+		#firsts = [Token.LPAREN_T]
+		#follows = []
 
 		errors = 0
 
@@ -67,9 +69,10 @@ class SyntacticalAnalyzer(object):
 
 	def define(self):
 		self.doHeaderOutput("Define")
+		CURRENT_RULE = Rule.DEFINE
 
-		firsts = [Token.LPAREN_T]
-		follows = [Token.EOF_T, Token.LPAREN_T]
+		#firsts = [Token.LPAREN_T]
+		#follows = [Token.EOF_T, Token.LPAREN_T]
 
 		errors = 0
 
@@ -125,13 +128,15 @@ class SyntacticalAnalyzer(object):
 
 	def more_defines(self):
 		self.doHeaderOutput("More_Defines")
+		CURRENT_RULE = Rule.MORE_DEFINES
 
-		firsts = [Token.EOF_T, Token.LPAREN_T]
-		follows = [Token.EOF_T]
+		#firsts = [Token.EOF_T, Token.LPAREN_T]
+		#follows = [Token.EOF_T]
 
 		errors = 0
 
-		if (self.ct not in follows):
+		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
+		#if (self.ct not in follows):
 			self.doRuleOutput("3")
 			errors += self.define()
 			errors += self.more_defines()
@@ -144,14 +149,16 @@ class SyntacticalAnalyzer(object):
 
 	def stmt_list(self):
 		self.doHeaderOutput("Stmt_List")
+		CURRENT_RULE = Rule.STMT_LIST
 
-		firsts = [Token.RPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T, Token.IDENT_T,
-		          Token.LPAREN_T]
-		follows = [Token.RPAREN_T]
+		#firsts = [Token.RPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T, Token.IDENT_T,
+		#          Token.LPAREN_T]
+		#follows = [Token.RPAREN_T]
 
 		errors = 0
 
-		if (self.ct not in follows):
+		if (Helpers.follows[CURRENT_RULE][self.ct] == 0):
+		#if (self.ct not in follows):
 			self.doRuleOutput("5")
 			errors += self.stmt()
 			errors += self.stmt_list()
@@ -164,9 +171,10 @@ class SyntacticalAnalyzer(object):
 
 	def stmt(self):
 		self.doHeaderOutput("Stmt")
+		CURRENT_RULE = Rule.STMT
 
-		firsts = [Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
+		#firsts = [Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
+		#follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
 
 		errors = 0
 
@@ -193,9 +201,10 @@ class SyntacticalAnalyzer(object):
 
 	def literal(self):
 		self.doHeaderOutput("Literal")
+		CURRENT_RULE = Rule.LITERAL
 
-		firsts = [Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
+		#firsts = [Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
+		#follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
 
 		errors = 0
 
@@ -213,9 +222,10 @@ class SyntacticalAnalyzer(object):
 
 	def quoted_lit(self):
 		self.doHeaderOutput("Quoted_Lit")
+		CURRENT_RULE = Rule.QUOTED_LIT
 
-		firsts = [Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
-		follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
+		#firsts = [Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
+		#follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
 
 		errors = 0
 
@@ -228,14 +238,15 @@ class SyntacticalAnalyzer(object):
 
 	def more_tokens(self):
 		self.doHeaderOutput("More_Tokens")
+		CURRENT_RULE = Rule.MORE_TOKENS
 
-		firsts = [Token.RPAREN_T, Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
-		follows = [Token.RPAREN_T]
+		#firsts = [Token.RPAREN_T, Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
+		#follows = [Token.RPAREN_T]
 
 		errors = 0
 
-
-		if (self.ct not in follows):
+		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
+		#if (self.ct not in follows):
 			self.doRuleOutput("14")
 			errors += self.any_other_token()
 			errors += self.more_tokens()
@@ -248,9 +259,10 @@ class SyntacticalAnalyzer(object):
 
 	def param_list(self):
 		self.doHeaderOutput("Param_List")
+		CURRENT_RULE = Rule.PARAM_LIST
 
-		firsts = [Token.IDENT_T, Token.RPAREN_T]
-		follows = [Token.RPAREN_T]
+		#firsts = [Token.IDENT_T, Token.RPAREN_T]
+		#follows = [Token.RPAREN_T]
 
 		errors = 0
 
@@ -267,13 +279,15 @@ class SyntacticalAnalyzer(object):
 
 	def else_part(self):
 		self.doHeaderOutput("Else_Part")
+		CURRENT_RULE = Rule.ELSE_PART
 
-		firsts = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		follows = [Token.RPAREN_T]
+		#firsts = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
+		#follows = [Token.RPAREN_T]
 
 		errors = 0
 
-		if (self.ct not in follows):
+		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
+		#if (self.ct not in follows):
 			self.doRuleOutput("18")
 			errors += self.stmt()
 		else:
@@ -285,9 +299,10 @@ class SyntacticalAnalyzer(object):
 
 	def stmt_pair(self):
 		self.doHeaderOutput("Stmt_Pair")
+		CURRENT_RULE = Rule.STMT_PAIR
 
-		firsts = [Token.LPAREN_T, Token.RPAREN_T]
-		follows = [Token.RPAREN_T]
+		#firsts = [Token.LPAREN_T, Token.RPAREN_T]
+		#follows = [Token.RPAREN_T]
 
 		errors = 0
 
@@ -304,9 +319,10 @@ class SyntacticalAnalyzer(object):
 
 	def stmt_pair_body(self):
 		self.doHeaderOutput("Stmt_Pair_Body")
+		CURRENT_RULE = Rule.STMT_PAIR_BODY
 
-		firsts = [Token.ELSE_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		follows = [Token.RPAREN_T]
+		#firsts = [Token.ELSE_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
+		#follows = [Token.RPAREN_T]
 
 		errors = 0
 
@@ -336,9 +352,10 @@ class SyntacticalAnalyzer(object):
 
 	def action(self):
 		self.doHeaderOutput("Action")
+		CURRENT_RULE = Rule.ACTION
 
-		firsts = [Token.IF_T, Token.COND_T, Token.LISTOP_T, Token.CONS_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.IDENT_T, Token.DISPLAY_T, Token.NEWLINE_T]
-		follows = [Token.RPAREN_T]
+		#firsts = [Token.IF_T, Token.COND_T, Token.LISTOP_T, Token.CONS_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.IDENT_T, Token.DISPLAY_T, Token.NEWLINE_T]
+		#follows = [Token.RPAREN_T]
 
 		errors = 0
 
@@ -396,10 +413,11 @@ class SyntacticalAnalyzer(object):
 
 	def any_other_token(self):
 		self.doHeaderOutput("Any_Other_Token")
+		CURRENT_RULE = Rule.ANY_OTHER_TOKEN
 
-		firsts = [Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
+		#firsts = [Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
 
-		follows = [Token.RPAREN_T, Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
+		#follows = [Token.RPAREN_T, Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
 
 		errors = 0
 
@@ -439,3 +457,4 @@ class SyntacticalAnalyzer(object):
 
 		self.doExitOutput("Any_Other_Token")
 		return errors
+
