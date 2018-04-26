@@ -1,4 +1,4 @@
-CS 460 Project 2 - Checkpoint
+CS 460 Project 2
 Authors: Adam May
 	 Justin Ramos
 
@@ -23,19 +23,11 @@ OUTPUT:
 WHAT WORKS:
 	The program is able to sucessfully parse error free scheme code
 	that follow the syntactical rules of the project.
+	The program can also perform basic error recovery.
 
 
 WHAT DOESN'T WORK:
-	Everything works according to the checkpoint specifications. The
-	following items are areas that need to be improved upon for part 2
-	of the project.
-		1. The C++ LexicalAnalyzer class needs some tweaks. I really
-			wanted to avoid touching ANYTHING related to it more
-			for the experience of "dealing with the cards I'd been
-			dealt."
-		2. Firsts and follows are not implemented in an efficient way.
-			This absolutely needs to be redone. They'll likely end
-			up getting stored in a table for part 2.
-		3. The LexicalAnalyzerWrapper class could use some cleanup,
-			especially with how a LexicalAnalyzer created a new
-			wrapper class every single time a new analyzer is made.
+	There seems to be a problem in the output of what rule is being
+	used. In a few instances the rule used differs from the expected
+	(seemingly?), but the code still comes out as error free. I
+	haven't been able to determine what is causing this issue.
