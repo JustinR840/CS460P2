@@ -47,7 +47,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -58,7 +57,6 @@ class SyntacticalAnalyzer(object):
 
 		if (self.ct == Token.EOF_T):
 			pass
-		# self.ct = self.lex.getToken()
 		else:
 			errors += 1
 			self.ReportError("Program: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected EOF_T")
@@ -73,7 +71,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -134,12 +131,10 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
-		#if (self.ct not in follows):
 			self.doRuleOutput("3")
 			errors += self.define()
 			errors += self.more_defines()
@@ -157,12 +152,10 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
 		if (Helpers.follows[CURRENT_RULE][self.ct] == 0):
-		#if (self.ct not in follows):
 			self.doRuleOutput("5")
 			errors += self.stmt()
 			errors += self.stmt_list()
@@ -180,7 +173,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -212,7 +204,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -235,7 +226,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -253,12 +243,10 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
-		#if (self.ct not in follows):
 			self.doRuleOutput("14")
 			errors += self.any_other_token()
 			errors += self.more_tokens()
@@ -276,7 +264,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -298,12 +285,10 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
-		#if (self.ct not in follows):
 			self.doRuleOutput("18")
 			errors += self.stmt()
 		else:
@@ -320,7 +305,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -342,7 +326,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -377,7 +360,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
@@ -440,7 +422,6 @@ class SyntacticalAnalyzer(object):
 
 		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
-			print("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
 
