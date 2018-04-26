@@ -25,10 +25,10 @@ class SyntacticalAnalyzer(object):
 		self.writeToP2ListingFile("Entering " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct) + ", lexeme: " + self.lex.getLexeme())
 
 	def doExitOutput(self, funcName):
-		self.writeToP2ListingFile("Exiting " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct) + ", lexeme: " + self.lex.getLexeme())
+		self.writeToP2ListingFile("Exiting " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct))
 
 	def doRuleOutput(self, rule):
-		self.writeToP2ListingFile("Using Rule: " + rule)
+		self.writeToP2ListingFile("Using Rule " + rule)
 
 	def writeToP2ListingFile(self, text):
 		self.p2File.write(text + "\n")
