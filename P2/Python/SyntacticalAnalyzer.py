@@ -34,9 +34,6 @@ class SyntacticalAnalyzer(object):
 		self.p2File.write(text + "\n")
 
 
-	# TODO: Declare the first/follows outside of their function calls (make static) (table maybe?)
-
-
 	def parse(self):
 		# Get the first token and start the program!
 		self.ct = self.lex.getToken()
@@ -46,11 +43,13 @@ class SyntacticalAnalyzer(object):
 	def program(self):
 		self.doHeaderOutput("Program")
 		CURRENT_RULE = Rule.PROGRAM
-
-		#firsts = [Token.LPAREN_T]
-		#follows = []
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		self.doRuleOutput("2")
 		errors += self.define()
@@ -70,11 +69,13 @@ class SyntacticalAnalyzer(object):
 	def define(self):
 		self.doHeaderOutput("Define")
 		CURRENT_RULE = Rule.DEFINE
-
-		#firsts = [Token.LPAREN_T]
-		#follows = [Token.EOF_T, Token.LPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		# Cascading if statements because we need to fulfill ALL requirements to be valid
 
@@ -129,11 +130,13 @@ class SyntacticalAnalyzer(object):
 	def more_defines(self):
 		self.doHeaderOutput("More_Defines")
 		CURRENT_RULE = Rule.MORE_DEFINES
-
-		#firsts = [Token.EOF_T, Token.LPAREN_T]
-		#follows = [Token.EOF_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
 		#if (self.ct not in follows):
@@ -150,12 +153,13 @@ class SyntacticalAnalyzer(object):
 	def stmt_list(self):
 		self.doHeaderOutput("Stmt_List")
 		CURRENT_RULE = Rule.STMT_LIST
-
-		#firsts = [Token.RPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T, Token.IDENT_T,
-		#          Token.LPAREN_T]
-		#follows = [Token.RPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (Helpers.follows[CURRENT_RULE][self.ct] == 0):
 		#if (self.ct not in follows):
@@ -172,11 +176,13 @@ class SyntacticalAnalyzer(object):
 	def stmt(self):
 		self.doHeaderOutput("Stmt")
 		CURRENT_RULE = Rule.STMT
-
-		#firsts = [Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		#follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (self.ct == Token.IDENT_T):
 			self.doRuleOutput("8")
@@ -202,11 +208,13 @@ class SyntacticalAnalyzer(object):
 	def literal(self):
 		self.doHeaderOutput("Literal")
 		CURRENT_RULE = Rule.LITERAL
-
-		#firsts = [Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		#follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (self.ct == Token.NUMLIT_T or self.ct == Token.STRLIT_T):
 			self.doRuleOutput("10 or 11")
@@ -223,11 +231,13 @@ class SyntacticalAnalyzer(object):
 	def quoted_lit(self):
 		self.doHeaderOutput("Quoted_Lit")
 		CURRENT_RULE = Rule.QUOTED_LIT
-
-		#firsts = [Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
-		#follows = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token. STRLIT_T, Token.QUOTE_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		self.doRuleOutput("13")
 		errors += self.any_other_token()
@@ -239,11 +249,13 @@ class SyntacticalAnalyzer(object):
 	def more_tokens(self):
 		self.doHeaderOutput("More_Tokens")
 		CURRENT_RULE = Rule.MORE_TOKENS
-
-		#firsts = [Token.RPAREN_T, Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
-		#follows = [Token.RPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
 		#if (self.ct not in follows):
@@ -260,11 +272,13 @@ class SyntacticalAnalyzer(object):
 	def param_list(self):
 		self.doHeaderOutput("Param_List")
 		CURRENT_RULE = Rule.PARAM_LIST
-
-		#firsts = [Token.IDENT_T, Token.RPAREN_T]
-		#follows = [Token.RPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (self.ct == Token.IDENT_T):
 			self.doRuleOutput("16")
@@ -280,11 +294,13 @@ class SyntacticalAnalyzer(object):
 	def else_part(self):
 		self.doHeaderOutput("Else_Part")
 		CURRENT_RULE = Rule.ELSE_PART
-
-		#firsts = [Token.RPAREN_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		#follows = [Token.RPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
 		#if (self.ct not in follows):
@@ -300,11 +316,13 @@ class SyntacticalAnalyzer(object):
 	def stmt_pair(self):
 		self.doHeaderOutput("Stmt_Pair")
 		CURRENT_RULE = Rule.STMT_PAIR
-
-		#firsts = [Token.LPAREN_T, Token.RPAREN_T]
-		#follows = [Token.RPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (self.ct == Token.LPAREN_T):
 			self.doRuleOutput("20")
@@ -320,11 +338,13 @@ class SyntacticalAnalyzer(object):
 	def stmt_pair_body(self):
 		self.doHeaderOutput("Stmt_Pair_Body")
 		CURRENT_RULE = Rule.STMT_PAIR_BODY
-
-		#firsts = [Token.ELSE_T, Token.IDENT_T, Token.LPAREN_T, Token.NUMLIT_T, Token.STRLIT_T, Token.QUOTE_T]
-		#follows = [Token.RPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (self.ct == Token.ELSE_T):
 			self.doRuleOutput("23")
@@ -353,11 +373,13 @@ class SyntacticalAnalyzer(object):
 	def action(self):
 		self.doHeaderOutput("Action")
 		CURRENT_RULE = Rule.ACTION
-
-		#firsts = [Token.IF_T, Token.COND_T, Token.LISTOP_T, Token.CONS_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.IDENT_T, Token.DISPLAY_T, Token.NEWLINE_T]
-		#follows = [Token.RPAREN_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (self.ct == Token.IF_T):
 			self.doRuleOutput("24")
@@ -414,12 +436,13 @@ class SyntacticalAnalyzer(object):
 	def any_other_token(self):
 		self.doHeaderOutput("Any_Other_Token")
 		CURRENT_RULE = Rule.ANY_OTHER_TOKEN
-
-		#firsts = [Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
-
-		#follows = [Token.RPAREN_T, Token.LPAREN_T, Token.IDENT_T, Token.NUMLIT_T, Token.STRLIT_T, Token.CONS_T, Token.IF_T, Token.DISPLAY_T, Token.NEWLINE_T, Token.LISTOP_T, Token.AND_T, Token.OR_T, Token.NOT_T, Token.DEFINE_T, Token.NUMBERP_T, Token.SYMBOLP_T, Token.LISTP_T, Token.ZEROP_T, Token.NULLP_T, Token.STRINGP_T, Token.PLUS_T, Token.MINUS_T, Token.DIV_T, Token.MULT_T, Token.MODULO_T, Token.EQUALTO_T, Token.GT_T, Token.LT_T, Token.GTE_T, Token.LTE_T, Token.QUOTE_T, Token.COND_T, Token.ELSE_T]
-
 		errors = 0
+
+		while (Helpers.firsts[CURRENT_RULE][self.ct] == 0 and Helpers.follows[CURRENT_RULE][self.ct] == 0):
+			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
+			print("Unexpected token: '" + str(self.ct) + "'")
+			self.ct = self.lex.getToken()
+			errors += 1
 
 		if (self.ct == Token.LPAREN_T):
 			self.doRuleOutput("50")
