@@ -131,15 +131,12 @@ class SyntacticalAnalyzer(object):
 					if (self.ct == Token.IDENT_T):
 						self.ct = self.lex.getToken()
 
-						self.doRuleOutput("16-17")
 						errors += self.param_list()
 
 						if (self.ct == Token.RPAREN_T):
 							self.ct = self.lex.getToken()
 
-							self.doRuleOutput("7-9")
 							errors += self.stmt()
-							self.doRuleOutput("5-6")
 							errors += self.stmt_list()
 
 							if (self.ct == Token.RPAREN_T):
@@ -251,7 +248,8 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if (self.ct == Token.NUMLIT_T or self.ct == Token.STRLIT_T):
-			self.doRuleOutput("10 or 11")
+			rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
+			self.doRuleOutput(str(rule_num))
 			self.ct = self.lex.getToken()
 		elif (self.ct == Token.QUOTE_T):
 			self.doRuleOutput("12")
@@ -405,53 +403,6 @@ class SyntacticalAnalyzer(object):
 			self.ReportError("Unexpected token: '" + str(self.ct) + "'")
 			self.ct = self.lex.getToken()
 			errors += 1
-
-
-
-		# if (self.ct == Token.IF_T):
-		# 	self.doRuleOutput("24")
-		# 	self.ct = self.lex.getToken()
-		# 	errors += self.stmt()
-		# 	errors += self.stmt()
-		# 	errors += self.else_part()
-		# elif (self.ct == Token.COND_T):
-		# 	self.doRuleOutput("25")
-		# 	self.ct = self.lex.getToken()
-		# 	if (self.ct == Token.LPAREN_T):
-		# 		self.ct = self.lex.getToken()
-		# 		errors += self.stmt_pair_body()
-		# 	else:
-		# 		errors += 1
-		# 		self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
-		# else:
-		# 	rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
-		# 	if(rule_num != 0):
-		# 		self.doRuleOutput(str(rule_num))
-		# 		#rule_to_use = self.getRuleToUse(rule_num)
-		# 		#self.rule_mappings[rule_to_use]()
-		#
-		# 		if (rule_num == 26 or (rule_num >= 30 and rule_num <= 36) or rule_num == 48):
-		# 			self.ct = self.lex.getToken()
-		# 			errors += self.stmt()
-		# 		elif (rule_num == 28 or rule_num == 29 or rule_num == 37 or rule_num == 40 or rule_num == 42 or rule_num == 43 or (rule_num >= 45 and rule_num <= 47)):
-		# 			self.ct = self.lex.getToken()
-		# 			errors += self.stmt_list()
-		# 		elif (rule_num == 27 or rule_num == 41):
-		# 			self.ct = self.lex.getToken()
-		# 			errors += self.stmt()
-		# 			errors += self.stmt()
-		# 		elif (rule_num == 38 or rule_num == 39):
-		# 			self.ct = self.lex.getToken()
-		# 			errors += self.stmt()
-		# 			errors += self.stmt_list()
-		# 		elif (rule_num == 49):
-		# 			self.ct = self.lex.getToken()
-		# 	else:
-		# 		errors += 1
-		# 		self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; <action> expected")
-
-
-
 
 		if (self.ct == Token.IF_T):
 			self.doRuleOutput("24")
