@@ -9,6 +9,7 @@ class SyntacticalAnalyzer(object):
 		self.p2File = open(self.filename[:-3] + ".p2", "a")
 		self.ct = ""
 		self.lex = LA.LexicalAnalyzer(filename.encode("utf-8"))
+		self.current_rule = 0
 
 		self.rule_mappings = {
 			1: self.program,
@@ -39,8 +40,11 @@ class SyntacticalAnalyzer(object):
 	def doExitOutput(self, funcName):
 		self.writeToP2ListingFile("Exiting " + funcName + " function; current token is: " + self.lex.getTokenName(self.ct))
 
-	def doRuleOutput(self, rule):
-		self.writeToP2ListingFile("Using Rule " + rule)
+	def doRuleOutput(self):
+		self.writeToP2ListingFile("Using Rule " + str(self.current_rule))
+
+	#def doRuleOutput(self, rule):
+		#self.writeToP2ListingFile("Using Rule " + rule)
 
 	def writeToP2ListingFile(self, text):
 		self.p2File.write(text + "\n")
@@ -79,12 +83,15 @@ class SyntacticalAnalyzer(object):
 	def parse(self):
 		# Get the first token and start the program!
 		self.ct = self.lex.getToken()
-		self.doRuleOutput("1")
+		# self.doRuleOutput("1")
+		self.current_rule = 1
 		errors = self.program()
 		print(errors, "found in Syntactical Analysis.")
 
 	def program(self):
 		self.doHeaderOutput("Program")
+		self.doRuleOutput()
+		#self.doRuleOutput("1") # I feel like this should be in the parse call
 		CURRENT_RULE = Rule.PROGRAM
 		errors = 0
 
@@ -93,9 +100,11 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 			errors += 1
 
-		self.doRuleOutput("2")
+		#self.doRuleOutput("2")
+		self.current_rule = 2
 		errors += self.define()
-		self.doRuleOutput("3")
+		#self.doRuleOutput("3")
+		self.current_rule = 3
 		errors += self.more_defines()
 
 		if (self.ct == Token.EOF_T):
@@ -109,6 +118,7 @@ class SyntacticalAnalyzer(object):
 
 	def define(self):
 		self.doHeaderOutput("Define")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.DEFINE
 		errors = 0
 
@@ -166,6 +176,7 @@ class SyntacticalAnalyzer(object):
 
 	def more_defines(self):
 		self.doHeaderOutput("More_Defines")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.MORE_DEFINES
 		errors = 0
 
@@ -175,11 +186,13 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
-			self.doRuleOutput("3")
+			#self.doRuleOutput("3")
+			self.current_rule = 3
 			errors += self.define()
 			errors += self.more_defines()
 		else:
-			self.doRuleOutput("4")
+			#self.doRuleOutput("4")
+			self.current_rule = 4
 
 		self.doExitOutput("More_Defines")
 		return errors
@@ -187,6 +200,7 @@ class SyntacticalAnalyzer(object):
 
 	def stmt_list(self):
 		self.doHeaderOutput("Stmt_List")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.STMT_LIST
 		errors = 0
 
@@ -196,11 +210,13 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if (Helpers.follows[CURRENT_RULE][self.ct] == 0):
-			self.doRuleOutput("5")
+			#self.doRuleOutput("5")
+			self.current_rule = 5
 			errors += self.stmt()
 			errors += self.stmt_list()
 		else:
-			self.doRuleOutput("6")
+			#self.doRuleOutput("6")
+			self.current_rule = 6
 
 		self.doExitOutput("Stmt_List")
 		return errors
@@ -208,6 +224,7 @@ class SyntacticalAnalyzer(object):
 
 	def stmt(self):
 		self.doHeaderOutput("Stmt")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.STMT
 		errors = 0
 
@@ -217,10 +234,12 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if (self.ct == Token.IDENT_T):
-			self.doRuleOutput("8")
+			#self.doRuleOutput("8")
+			self.current_rule = 8
 			self.ct = self.lex.getToken()
 		elif (self.ct == Token.LPAREN_T):
-			self.doRuleOutput("9")
+			#self.doRuleOutput("9")
+			self.current_rule = 9
 			self.ct = self.lex.getToken()
 
 			errors += self.action()
@@ -230,7 +249,8 @@ class SyntacticalAnalyzer(object):
 				errors += 1
 				self.ReportError("Stmt: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 		else:
-			self.doRuleOutput("7")
+			#self.doRuleOutput("7")
+			self.current_rule = 7
 			errors += self.literal()
 
 		self.doExitOutput("Stmt")
@@ -239,6 +259,7 @@ class SyntacticalAnalyzer(object):
 
 	def literal(self):
 		self.doHeaderOutput("Literal")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.LITERAL
 		errors = 0
 
@@ -249,10 +270,12 @@ class SyntacticalAnalyzer(object):
 
 		if (self.ct == Token.NUMLIT_T or self.ct == Token.STRLIT_T):
 			rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
-			self.doRuleOutput(str(rule_num))
+			#self.doRuleOutput(str(rule_num))
+			self.current_rule = rule_num
 			self.ct = self.lex.getToken()
 		elif (self.ct == Token.QUOTE_T):
-			self.doRuleOutput("12")
+			#self.doRuleOutput("12")
+			self.current_rule = 12
 			self.ct = self.lex.getToken()
 			errors += self.quoted_lit()
 
@@ -262,6 +285,7 @@ class SyntacticalAnalyzer(object):
 
 	def quoted_lit(self):
 		self.doHeaderOutput("Quoted_Lit")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.QUOTED_LIT
 		errors = 0
 
@@ -270,7 +294,8 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 			errors += 1
 
-		self.doRuleOutput("13")
+		#self.doRuleOutput("13")
+		self.current_rule = 13
 		errors += self.any_other_token()
 
 		self.doExitOutput("Quoted_Lit")
@@ -279,6 +304,7 @@ class SyntacticalAnalyzer(object):
 
 	def more_tokens(self):
 		self.doHeaderOutput("More_Tokens")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.MORE_TOKENS
 		errors = 0
 
@@ -288,11 +314,13 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
-			self.doRuleOutput("14")
+			#self.doRuleOutput("14")
+			self.current_rule = 14
 			errors += self.any_other_token()
 			errors += self.more_tokens()
 		else:
-			self.doRuleOutput("15")
+			#self.doRuleOutput("15")
+			self.current_rule = 15
 
 		self.doExitOutput("More_Tokens")
 		return errors
@@ -300,6 +328,7 @@ class SyntacticalAnalyzer(object):
 
 	def param_list(self):
 		self.doHeaderOutput("Param_List")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.PARAM_LIST
 		errors = 0
 
@@ -309,11 +338,13 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if (self.ct == Token.IDENT_T):
-			self.doRuleOutput("16")
+			#self.doRuleOutput("16")
+			self.current_rule = 16
 			self.ct = self.lex.getToken()
 			errors += self.param_list()
 		else:
-			self.doRuleOutput("17")
+			#self.doRuleOutput("17")
+			self.current_rule = 17
 
 		self.doExitOutput("Param_List")
 		return errors
@@ -321,6 +352,7 @@ class SyntacticalAnalyzer(object):
 
 	def else_part(self):
 		self.doHeaderOutput("Else_Part")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.ELSE_PART
 		errors = 0
 
@@ -330,10 +362,12 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if(Helpers.follows[CURRENT_RULE][self.ct] == 0):
-			self.doRuleOutput("18")
+			#self.doRuleOutput("18")
+			self.current_rule = 18
 			errors += self.stmt()
 		else:
-			self.doRuleOutput("19")
+			#self.doRuleOutput("19")
+			self.current_rule = 19
 
 		self.doExitOutput("Else_Part")
 		return errors
@@ -341,6 +375,7 @@ class SyntacticalAnalyzer(object):
 
 	def stmt_pair(self):
 		self.doHeaderOutput("Stmt_Pair")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.STMT_PAIR
 		errors = 0
 
@@ -350,11 +385,13 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if (self.ct == Token.LPAREN_T):
-			self.doRuleOutput("20")
+			#self.doRuleOutput("20")
+			self.current_rule = 20
 			self.ct = self.lex.getToken()
 			errors += self.stmt_pair_body()
 		else:
-			self.doRuleOutput("21")
+			#self.doRuleOutput("21")
+			self.current_rule = 21
 
 		self.doExitOutput("Stmt_Pair")
 		return errors
@@ -362,6 +399,7 @@ class SyntacticalAnalyzer(object):
 
 	def stmt_pair_body(self):
 		self.doHeaderOutput("Stmt_Pair_Body")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.STMT_PAIR_BODY
 		errors = 0
 
@@ -371,7 +409,8 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if (self.ct == Token.ELSE_T):
-			self.doRuleOutput("23")
+			#self.doRuleOutput("23")
+			self.current_rule = 23
 			self.ct = self.lex.getToken()
 			errors += self.stmt()
 			if (self.ct == Token.RPAREN_T):
@@ -380,7 +419,8 @@ class SyntacticalAnalyzer(object):
 				errors += 1
 				self.ReportError("Stmt_Pair_Body: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 		else:
-			self.doRuleOutput("22")
+			#self.doRuleOutput("22")
+			self.current_rule = 22
 			errors += self.stmt()
 			errors += self.stmt()
 			if (self.ct == Token.RPAREN_T):
@@ -396,6 +436,7 @@ class SyntacticalAnalyzer(object):
 
 	def action(self):
 		self.doHeaderOutput("Action")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.ACTION
 		errors = 0
 
@@ -405,13 +446,15 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if (self.ct == Token.IF_T):
-			self.doRuleOutput("24")
+			#self.doRuleOutput("24")
+			self.current_rule = 24
 			self.ct = self.lex.getToken()
 			errors += self.stmt()
 			errors += self.stmt()
 			errors += self.else_part()
 		elif (self.ct == Token.COND_T):
-			self.doRuleOutput("25")
+			#self.doRuleOutput("25")
+			self.current_rule = 25
 			self.ct = self.lex.getToken()
 			if (self.ct == Token.LPAREN_T):
 				self.ct = self.lex.getToken()
@@ -422,7 +465,8 @@ class SyntacticalAnalyzer(object):
 		else:
 			rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
 			if(rule_num != 0):
-				self.doRuleOutput(str(rule_num))
+				#self.doRuleOutput(str(rule_num))
+				self.current_rule = rule_num
 				if (self.ct == Token.LISTOP_T or self.ct == Token.NOT_T or
 						      self.ct == Token.NUMBERP_T or self.ct == Token.SYMBOLP_T or
 						      self.ct == Token.LISTP_T or self.ct == Token.ZEROP_T or
@@ -457,6 +501,7 @@ class SyntacticalAnalyzer(object):
 
 	def any_other_token(self):
 		self.doHeaderOutput("Any_Other_Token")
+		self.doRuleOutput()
 		CURRENT_RULE = Rule.ANY_OTHER_TOKEN
 		errors = 0
 
@@ -466,7 +511,8 @@ class SyntacticalAnalyzer(object):
 			errors += 1
 
 		if(self.ct == Token.LPAREN_T):
-			self.doRuleOutput("50")
+			#self.doRuleOutput("50")
+			self.current_rule = 50
 			self.ct = self.lex.getToken()
 			errors += self.more_tokens()
 			if(self.ct == Token.RPAREN_T):
@@ -475,13 +521,15 @@ class SyntacticalAnalyzer(object):
 				errors += 1
 				self.ReportError("Any_Other_Token: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected RPAREN_T")
 		elif (self.ct == Token.QUOTE_T):
-			self.doRuleOutput("79")
+			#self.doRuleOutput("79")
+			self.current_rule = 79
 			self.ct = self.lex.getToken()
 			errors += self.any_other_token()
 		else:
 			rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
 			if(rule_num != 0):
-				self.doRuleOutput(str(rule_num))
+				#self.doRuleOutput(str(rule_num))
+				self.current_rule = rule_num
 				rule_to_use = self.getRuleToUse(rule_num)
 				self.rule_mappings[rule_to_use]()
 			else:
