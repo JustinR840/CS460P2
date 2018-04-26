@@ -406,6 +406,53 @@ class SyntacticalAnalyzer(object):
 			self.ct = self.lex.getToken()
 			errors += 1
 
+
+
+		# if (self.ct == Token.IF_T):
+		# 	self.doRuleOutput("24")
+		# 	self.ct = self.lex.getToken()
+		# 	errors += self.stmt()
+		# 	errors += self.stmt()
+		# 	errors += self.else_part()
+		# elif (self.ct == Token.COND_T):
+		# 	self.doRuleOutput("25")
+		# 	self.ct = self.lex.getToken()
+		# 	if (self.ct == Token.LPAREN_T):
+		# 		self.ct = self.lex.getToken()
+		# 		errors += self.stmt_pair_body()
+		# 	else:
+		# 		errors += 1
+		# 		self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
+		# else:
+		# 	rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
+		# 	if(rule_num != 0):
+		# 		self.doRuleOutput(str(rule_num))
+		# 		#rule_to_use = self.getRuleToUse(rule_num)
+		# 		#self.rule_mappings[rule_to_use]()
+		#
+		# 		if (rule_num == 26 or (rule_num >= 30 and rule_num <= 36) or rule_num == 48):
+		# 			self.ct = self.lex.getToken()
+		# 			errors += self.stmt()
+		# 		elif (rule_num == 28 or rule_num == 29 or rule_num == 37 or rule_num == 40 or rule_num == 42 or rule_num == 43 or (rule_num >= 45 and rule_num <= 47)):
+		# 			self.ct = self.lex.getToken()
+		# 			errors += self.stmt_list()
+		# 		elif (rule_num == 27 or rule_num == 41):
+		# 			self.ct = self.lex.getToken()
+		# 			errors += self.stmt()
+		# 			errors += self.stmt()
+		# 		elif (rule_num == 38 or rule_num == 39):
+		# 			self.ct = self.lex.getToken()
+		# 			errors += self.stmt()
+		# 			errors += self.stmt_list()
+		# 		elif (rule_num == 49):
+		# 			self.ct = self.lex.getToken()
+		# 	else:
+		# 		errors += 1
+		# 		self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; <action> expected")
+
+
+
+
 		if (self.ct == Token.IF_T):
 			self.doRuleOutput("24")
 			self.ct = self.lex.getToken()
@@ -421,38 +468,37 @@ class SyntacticalAnalyzer(object):
 			else:
 				errors += 1
 				self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; Expected LPAREN_T")
-		elif (self.ct == Token.LISTOP_T or self.ct == Token.NOT_T or
-				      self.ct == Token.NUMBERP_T or self.ct == Token.SYMBOLP_T or
-				      self.ct == Token.LISTP_T or self.ct == Token.ZEROP_T or
-				      self.ct == Token.NULLP_T or self.ct == Token.NULLP_T or
-				      self.ct == Token.STRINGP_T or self.ct == Token.DISPLAY_T):
-			self.doRuleOutput("26 or 30 or 31 or 32 or 33 or 34 or 35 or 36 or 48")
-			self.ct = self.lex.getToken()
-			errors += self.stmt()
-		elif (self.ct == Token.AND_T or self.ct == Token.OR_T or
-				      self.ct == Token.PLUS_T or self.ct == Token.MULT_T or
-				      self.ct == Token.EQUALTO_T or self.ct == Token.GT_T or
-				      self.ct == Token.LT_T or self.ct == Token.GTE_T or
-				      self.ct == Token.LTE_T or self.ct == Token.IDENT_T):
-			self.doRuleOutput("28 or 29 or 37 or 40 or 42 or 43 or 45 or 46 or 47")
-			self.ct = self.lex.getToken()
-			errors += self.stmt_list()
-		elif (self.ct == Token.CONS_T or self.ct == Token.MODULO_T):
-			self.doRuleOutput("27 or 41")
-			self.ct = self.lex.getToken()
-			errors += self.stmt()
-			errors += self.stmt()
-		elif (self.ct == Token.MINUS_T or self.ct == Token.DIV_T):
-			self.doRuleOutput("38 or 39")
-			self.ct = self.lex.getToken()
-			errors += self.stmt()
-			errors += self.stmt_list()
-		elif (self.ct == Token.NEWLINE_T):
-			self.doRuleOutput("49")
-			self.ct = self.lex.getToken()
 		else:
-			errors += 1
-			self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; <action> expected")
+			rule_num = Helpers.rule_transitions[CURRENT_RULE][self.ct]
+			if(rule_num != 0):
+				self.doRuleOutput(str(rule_num))
+				if (self.ct == Token.LISTOP_T or self.ct == Token.NOT_T or
+						      self.ct == Token.NUMBERP_T or self.ct == Token.SYMBOLP_T or
+						      self.ct == Token.LISTP_T or self.ct == Token.ZEROP_T or
+						      self.ct == Token.NULLP_T or self.ct == Token.NULLP_T or
+						      self.ct == Token.STRINGP_T or self.ct == Token.DISPLAY_T):
+					self.ct = self.lex.getToken()
+					errors += self.stmt()
+				elif (self.ct == Token.AND_T or self.ct == Token.OR_T or
+						      self.ct == Token.PLUS_T or self.ct == Token.MULT_T or
+						      self.ct == Token.EQUALTO_T or self.ct == Token.GT_T or
+						      self.ct == Token.LT_T or self.ct == Token.GTE_T or
+						      self.ct == Token.LTE_T or self.ct == Token.IDENT_T):
+					self.ct = self.lex.getToken()
+					errors += self.stmt_list()
+				elif (self.ct == Token.CONS_T or self.ct == Token.MODULO_T):
+					self.ct = self.lex.getToken()
+					errors += self.stmt()
+					errors += self.stmt()
+				elif (self.ct == Token.MINUS_T or self.ct == Token.DIV_T):
+					self.ct = self.lex.getToken()
+					errors += self.stmt()
+					errors += self.stmt_list()
+				elif (self.ct == Token.NEWLINE_T):
+					self.ct = self.lex.getToken()
+			else:
+				errors += 1
+				self.ReportError("Action: Unexpected " + self.lex.getTokenName(self.ct) + "; <action> expected")
 
 		self.doExitOutput("Action")
 		return errors
