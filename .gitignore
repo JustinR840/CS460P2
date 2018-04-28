@@ -6,3 +6,5 @@ __pycache__/
 *.p1
 *.p2
 .DS_Store
+*.tgz
+*.ss
